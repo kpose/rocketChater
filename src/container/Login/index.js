@@ -3,12 +3,21 @@ import React from "react";
 import { SafeAreaView, Text } from "react-native";
 import { globalStyle, color } from "../../utility";
 import { InputField, Button } from "../../components";
+import LottieView from "lottie-react-native";
+
+const animation = require("../../annimation/chatlogo.json");
 
 const Login = ({ navigation }) => {
   return (
     <SafeAreaView style={[globalStyle.flex1, { backgroundColor: color.BLACK }]}>
       <View style={[globalStyle.containerCentered]}>
         {/* lottie animation should be here */}
+        <LottieView
+          source={animation}
+          autoPlay
+          style={{ width: 200, height: 250 }}
+          resizeMode="cover"
+        />
       </View>
 
       <View style={[globalStyle.flex2, globalStyle.sectionCentered]}>
