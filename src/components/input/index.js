@@ -1,7 +1,7 @@
 import React from "react";
-import { View, TextInput } from "react-native";
-import { color } from "../../utility";
+import { TextInput, Text } from "react-native";
 import styles from "./styles";
+import { color } from "../../utility";
 
 export default ({
   placeholder,
