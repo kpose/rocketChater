@@ -5,7 +5,7 @@ import { color } from "../../utility";
 const { height, width } = Dimensions.get("window");
 
 const Loading = () => {
-  let loading = true;
+  let loading = false;
 
   return loading ? (
     <View style={styles.loaderContainer}>
