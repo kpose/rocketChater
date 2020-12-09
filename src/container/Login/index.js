@@ -1,16 +1,15 @@
-import { View } from "native-base";
 import React, { useState } from "react";
-import { SafeAreaView, Text } from "react-native";
+import { SafeAreaView, Text, View, KeyboardAvoidingView } from "react-native";
 import { globalStyle, color } from "../../utility";
 import { InputField, Button } from "../../components";
 import LottieView from "lottie-react-native";
 
-const animation = require("../../annimation/chatlogo.json");
+const animation = require("../../annimation/loginannimation.json");
 
 const Login = ({ navigation }) => {
   const [credentials, setCredentials] = useState({
-    email,
-    password,
+    email: "",
+    password: "",
   });
 
   const { email, password } = credentials;
