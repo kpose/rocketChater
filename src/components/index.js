@@ -1,5 +1,7 @@
 import Button from "./button";
 import InputField from "./input";
 import Loading from "./loading";
+import Profile from "./profile";
+import ShowUsers from "./showUsers";
 
-export { Button, InputField, Loading };
+export { Button, InputField, Loading, Profile, ShowUsers };
