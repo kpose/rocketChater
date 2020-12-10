@@ -5,3 +5,4 @@ export const setUniqueValue = (u) => {
 };
 
 export const smallDeviceHeight = 650;
+export const keyboardVerticalOffset = -50;

@@ -4,7 +4,9 @@ import {
   Text,
   View,
   KeyboardAvoidingView,
-  LogBox,
+  TouchableWithoutFeedback,
+  Platform,
+  Keyboard,
 } from "react-native";
 import { globalStyle, color } from "../../utility";
 import { InputField, Button } from "../../components";
@@ -13,7 +15,10 @@ import { Store } from "../../context/store";
 import { LOADING_START, LOADING_STOP } from "../../context/actions/types";
 import { LoginRequest } from "../../network";
 import { keys, setAsyncStorage } from "../../asyncStorage";
-import { setUniqueValue } from "../../utility/constants";
+import {
+  setUniqueValue,
+  keyboardVerticalOffset,
+} from "../../utility/constants";
 
 const animation = require("../../annimation/loginannimation.json");
 
@@ -25,6 +30,7 @@ const Login = ({ navigation }) => {
     email: "",
     password: "",
   });
+  const [showAnmie, toggleAnmie] = useState(true);
 
   const { email, password } = credentials;
 
@@ -68,45 +74,70 @@ const Login = ({ navigation }) => {
         });
     }
   };
+
+  const handleFocus = () => {
+    setTimeout(() => {
+      toggleAnmie(false);
+    }, 2000);
+  };
+
+  const handleBlur = () => {
+    setTimeout(() => {
+      toggleAnmie(true);
+    }, 200);
+  };
   return (
-    <SafeAreaView style={[globalStyle.flex1, { backgroundColor: color.BLACK }]}>
-      <View style={[globalStyle.containerCentered]}>
-        {/* lottie animation should be here */}
-        <LottieView
-          source={animation}
-          autoPlay
-          style={{ width: 200, height: 250 }}
-          resizeMode="cover"
-        />
-      </View>
-
-      <View style={[globalStyle.flex2, globalStyle.sectionCentered]}>
-        <InputField
-          placeholder="Enter email"
-          value={email}
-          onChangeText={(text) => handleOnChange("email", text)}
-        />
-
-        <InputField
-          placeholder="Enter password"
-          secureTextEntry={true}
-          value={password}
-          onChangeText={(text) => handleOnChange("password", text)}
-        />
-
-        <Button title="Login" onPress={() => onLoginPress()} />
-        <Text
-          style={{
-            fontSize: 28,
-            fontWeight: "bold",
-            color: color.LIGHT_GREEN,
-          }}
-          onPress={() => navigation.navigate("Signup")}
+    <KeyboardAvoidingView
+      style={[globalStyle.flex1, { backgroundColor: color.BLACK }]}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      keyboardVerticalOffset={keyboardVerticalOffset}
+    >
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <SafeAreaView
+          style={[globalStyle.flex1, { backgroundColor: color.BLACK }]}
         >
-          Sign Up
-        </Text>
-      </View>
-    </SafeAreaView>
+          <View style={[globalStyle.containerCentered]}>
+            <LottieView
+              source={animation}
+              autoPlay
+              style={{ width: 200, height: 250 }}
+              resizeMode="cover"
+            />
+          </View>
+
+          <View style={[globalStyle.flex2, globalStyle.sectionCentered]}>
+            <InputField
+              placeholder="Enter email"
+              value={email}
+              onChangeText={(text) => handleOnChange("email", text)}
+              onFocus={() => handleFocus()}
+              onBlur={() => handleBlur()}
+            />
+
+            <InputField
+              placeholder="Enter password"
+              secureTextEntry={true}
+              value={password}
+              onChangeText={(text) => handleOnChange("password", text)}
+              onFocus={() => handleFocus()}
+              onBlur={() => handleBlur()}
+            />
+
+            <Button title="Login" onPress={() => onLoginPress()} />
+            <Text
+              style={{
+                fontSize: 28,
+                fontWeight: "bold",
+                color: color.LIGHT_GREEN,
+              }}
+              onPress={() => navigation.navigate("Signup")}
+            >
+              Sign Up
+            </Text>
+          </View>
+        </SafeAreaView>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 };
 

@@ -1,5 +1,13 @@
 import React, { useContext, useState } from "react";
-import { SafeAreaView, Text, View } from "react-native";
+import {
+  KeyboardAvoidingView,
+  TouchableWithoutFeedback,
+  Platform,
+  SafeAreaView,
+  Text,
+  View,
+  Keyboard,
+} from "react-native";
 import { globalStyle, color } from "../../utility";
 import { InputField, Button } from "../../components";
 import LottieView from "lottie-react-native";
@@ -7,7 +15,10 @@ import { Store } from "../../context/store";
 import { LOADING_START, LOADING_STOP } from "../../context/actions/types";
 import { SignUpRequest, AddUser } from "../../network";
 import { keys, setAsyncStorage } from "../../asyncStorage";
-import { setUniqueValue } from "../../utility/constants";
+import {
+  setUniqueValue,
+  keyboardVerticalOffset,
+} from "../../utility/constants";
 import firebase from "../../firebase/config";
 
 const animation = require("../../annimation/signupannimation.json");
@@ -21,6 +32,7 @@ const Signup = ({ navigation }) => {
     password: "",
     confirmPassword: "",
   });
+  const [showAnmie, toggleAnmie] = useState(true);
 
   const { email, password, name, confirmPassword } = credentials;
 
@@ -29,6 +41,18 @@ const Signup = ({ navigation }) => {
       ...credentials,
       [name]: value,
     });
+  };
+
+  const handleFocus = () => {
+    setTimeout(() => {
+      toggleAnmie(false);
+    }, 2000);
+  };
+
+  const handleBlur = () => {
+    setTimeout(() => {
+      toggleAnmie(true);
+    }, 200);
   };
 
   const onSignupPress = () => {
@@ -82,57 +106,75 @@ const Signup = ({ navigation }) => {
   };
 
   return (
-    <SafeAreaView style={[globalStyle.flex1, { backgroundColor: color.BLACK }]}>
-      <View style={[globalStyle.containerCentered]}>
-        {/* lottie animation should be here */}
-        <LottieView
-          source={animation}
-          autoPlay
-          style={{ width: 300, height: 300 }}
-          resizeMode="cover"
-        />
-      </View>
-
-      <View style={[globalStyle.flex2, globalStyle.sectionCentered]}>
-        <InputField
-          placeholder="Enter name"
-          value={name}
-          onChangeText={(text) => handleOnChange("name", text)}
-        />
-
-        <InputField
-          placeholder="Enter email"
-          value={email}
-          onChangeText={(text) => handleOnChange("email", text)}
-        />
-
-        <InputField
-          placeholder="Enter password"
-          secureTextEntry={true}
-          value={password}
-          onChangeText={(text) => handleOnChange("password", text)}
-        />
-
-        <InputField
-          placeholder="Confirm password"
-          secureTextEntry={true}
-          value={confirmPassword}
-          onChangeText={(text) => handleOnChange("confirmPassword", text)}
-        />
-
-        <Button title="Sign Up" onPress={() => onSignupPress()} />
-        <Text
-          style={{
-            fontSize: 28,
-            fontWeight: "bold",
-            color: color.LIGHT_GREEN,
-          }}
-          onPress={() => navigation.navigate("Login")}
+    <KeyboardAvoidingView
+      style={[globalStyle.flex1, { backgroundColor: color.BLACK }]}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      keyboardVerticalOffset={keyboardVerticalOffset}
+    >
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <SafeAreaView
+          style={[globalStyle.flex1, { backgroundColor: color.BLACK }]}
         >
-          Login
-        </Text>
-      </View>
-    </SafeAreaView>
+          <View style={[globalStyle.containerCentered]}>
+            {/* lottie animation should be here */}
+            <LottieView
+              source={animation}
+              autoPlay
+              style={{ width: 300, height: 300 }}
+              resizeMode="cover"
+            />
+          </View>
+
+          <View style={[globalStyle.flex2, globalStyle.sectionCentered]}>
+            <InputField
+              placeholder="Enter name"
+              value={name}
+              onChangeText={(text) => handleOnChange("name", text)}
+              onFocus={() => handleFocus()}
+              onBlur={() => handleBlur()}
+            />
+
+            <InputField
+              placeholder="Enter email"
+              value={email}
+              onChangeText={(text) => handleOnChange("email", text)}
+              onFocus={() => handleFocus()}
+              onBlur={() => handleBlur()}
+            />
+
+            <InputField
+              placeholder="Enter password"
+              secureTextEntry={true}
+              value={password}
+              onChangeText={(text) => handleOnChange("password", text)}
+              onFocus={() => handleFocus()}
+              onBlur={() => handleBlur()}
+            />
+
+            <InputField
+              placeholder="Confirm password"
+              secureTextEntry={true}
+              value={confirmPassword}
+              onChangeText={(text) => handleOnChange("confirmPassword", text)}
+              onFocus={() => handleFocus()}
+              onBlur={() => handleBlur()}
+            />
+
+            <Button title="Sign Up" onPress={() => onSignupPress()} />
+            <Text
+              style={{
+                fontSize: 28,
+                fontWeight: "bold",
+                color: color.LIGHT_GREEN,
+              }}
+              onPress={() => navigation.navigate("Login")}
+            >
+              Login
+            </Text>
+          </View>
+        </SafeAreaView>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 };
 
