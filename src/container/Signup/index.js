@@ -45,8 +45,15 @@ const Signup = ({ navigation }) => {
         type: LOADING_START,
       });
       SignUpRequest(email, password)
-        .then(() => {
-          console.log(firebase.auth().currentUser.uid);
+        .then((res) => {
+          if (!res.additionalUserInfo) {
+            dispatchLoaderAction({
+              type: LOADING_STOP,
+            });
+            alert(res);
+            return;
+          }
+          //console.log(firebase.auth().currentUser.uid);
           let uid = firebase.auth().currentUser.uid;
           let profileImg = "";
           AddUser(name, email, uid, profileImg)

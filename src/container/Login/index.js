@@ -46,6 +46,13 @@ const Login = ({ navigation }) => {
       });
       LoginRequest(email, password)
         .then((res) => {
+          if (!res.additionalUserInfo) {
+            dispatchLoaderAction({
+              type: LOADING_STOP,
+            });
+            alert(res);
+            return;
+          }
           setAsyncStorage(keys.uuid, res.user.uid);
           setUniqueValue(res.user.uid);
           dispatchLoaderAction({
