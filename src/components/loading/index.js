@@ -1,11 +1,14 @@
 import React, { useContext } from "react";
 import { ActivityIndicator, View, StyleSheet, Dimensions } from "react-native";
+import { Store } from "../../context/store";
 import { color } from "../../utility";
 
 const { height, width } = Dimensions.get("window");
 
 const Loading = () => {
-  let loading = false;
+  const globalState = useContext(Store);
+  const { mapLoaderState } = globalState;
+  const { loading } = mapLoaderState;
 
   return loading ? (
     <View style={styles.loaderContainer}>

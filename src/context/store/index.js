@@ -16,5 +16,5 @@ export function StoreProvider(props) {
     ...loaderValue,
   };
 
-  return <Store.Provider value={value}>{props.childres}</Store.Provider>;
+  return <Store.Provider value={value}>{props.children}</Store.Provider>;
 }

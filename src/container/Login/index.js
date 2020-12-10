@@ -1,12 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { SafeAreaView, Text, View, KeyboardAvoidingView } from "react-native";
 import { globalStyle, color } from "../../utility";
 import { InputField, Button } from "../../components";
 import LottieView from "lottie-react-native";
+import { Store } from "../../context/store";
+import { LOADING_START } from "../../context/actions/types";
 
 const animation = require("../../annimation/loginannimation.json");
 
 const Login = ({ navigation }) => {
+  const globalState = useContext(Store);
+  const { dispatchLoaderAction } = globalState;
+
   const [credentials, setCredentials] = useState({
     email: "",
     password: "",
@@ -27,7 +32,9 @@ const Login = ({ navigation }) => {
     } else if (!password) {
       alert("Please, enter a password");
     } else {
-      alert(JSON.stringify(credentials));
+      dispatchLoaderAction({
+        type: LOADING_START,
+      });
     }
   };
   return (
