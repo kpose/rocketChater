@@ -116,8 +116,6 @@ const Dashboard = ({ navigation }) => {
           quality: 1,
         });
 
-        console.log(result);
-
         if (!result.cancelled) {
           //console.log(result.uri);
           let source = result.uri;
@@ -157,6 +155,24 @@ const Dashboard = ({ navigation }) => {
     }
   };
 
+  //name tap to open chat
+  const nameTap = (profileImg, name, guestUserId) => {
+    if (!profileImg) {
+      navigation.navigate("Chat", {
+        name,
+        imgText: name.charAt(0),
+        guestUserId,
+        currentUserId: uuid,
+      });
+    } else {
+      navigation.navigate("Chat", {
+        name,
+        img: profileImg,
+        guestUserId,
+        currentUserId: uuid,
+      });
+    }
+  };
   return (
     <SafeAreaView style={[globalStyle.flex1, { backgroundColor: color.BLACK }]}>
       <FlatList
@@ -176,6 +192,7 @@ const Dashboard = ({ navigation }) => {
             name={item.name}
             img={item.profileImg}
             onImgTap={() => imgTap(item.profileImg, item.name)}
+            onNameTap={() => nameTap(item.profileImg, item.name, item.id)}
           />
         )}
       />
