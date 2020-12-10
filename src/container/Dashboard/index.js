@@ -102,6 +102,7 @@ const Dashboard = ({ navigation }) => {
     }
   }, []);
 
+  // profile image picker
   const selectPhotoTapped = async () => {
     if (Platform.OS !== "web") {
       const { status } = await ImagePicker.requestCameraRollPermissionsAsync();
@@ -118,7 +119,6 @@ const Dashboard = ({ navigation }) => {
         console.log(result);
 
         if (!result.cancelled) {
-          //setImage(result.uri);
           //console.log(result.uri);
           let source = result.uri;
           UpdateUser(uuid, source).then(() => {
@@ -132,6 +132,7 @@ const Dashboard = ({ navigation }) => {
     }
   };
 
+  //logout user
   const logout = () => {
     LogOutUser()
       .then(() => {
@@ -143,6 +144,19 @@ const Dashboard = ({ navigation }) => {
       })
       .catch((error) => alert(error));
   };
+
+  //open image
+  const imgTap = (profileImg, name) => {
+    if (!profileImg) {
+      navigation.navigate("ShowFullImg", {
+        name,
+        imgText: name.charAt(0),
+      });
+    } else {
+      navigation.navigate("ShowFullImg", { name, img: profileImg });
+    }
+  };
+
   return (
     <SafeAreaView style={[globalStyle.flex1, { backgroundColor: color.BLACK }]}>
       <FlatList
@@ -154,10 +168,15 @@ const Dashboard = ({ navigation }) => {
             img={profileImg}
             name={name}
             onEditImgTap={selectPhotoTapped}
+            onImgTap={() => imgTap(profileImg, name)}
           />
         }
         renderItem={({ item }) => (
-          <ShowUsers name={item.name} img={item.profileImg} />
+          <ShowUsers
+            name={item.name}
+            img={item.profileImg}
+            onImgTap={() => imgTap(item.profileImg, item.name)}
+          />
         )}
       />
     </SafeAreaView>

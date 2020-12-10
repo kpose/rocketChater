@@ -3,7 +3,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
 import { color } from "../utility";
 //import screens
-import { Login, Signup, Dashboard, Splash } from "../container";
+import { Login, Signup, Dashboard, Splash, ShowFullImg } from "../container";
 
 const Stack = createStackNavigator();
 
@@ -42,6 +42,11 @@ function NavContainer() {
           name="Dashboard"
           component={Dashboard}
           options={{ headerLeft: null }}
+        />
+        <Stack.Screen
+          name="ShowFullImg"
+          component={ShowFullImg}
+          options={{ headerBackTitle: null }}
         />
       </Stack.Navigator>
     </NavigationContainer>

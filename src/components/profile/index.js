@@ -28,7 +28,7 @@ export default ({ img, name, onImgTap, onEditImgTap }) => (
           name="user-edit"
           size={20}
           onPress={onEditImgTap}
-          color={color.WHITE}
+          color={color.LIGHT_GREEN}
         />
       </View>
     </View>
