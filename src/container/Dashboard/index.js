@@ -1,14 +1,23 @@
 import React, { useContext, useEffect, useLayoutEffect, useState } from "react";
-import { View, Text, Alert, SafeAreaView, FlatList } from "react-native";
+import {
+  View,
+  Text,
+  Alert,
+  SafeAreaView,
+  FlatList,
+  Platform,
+} from "react-native";
 import { SimpleLineIcons } from "@expo/vector-icons";
 import { color, globalStyle } from "../../utility";
-import { LogOutUser } from "../../network";
+import { LogOutUser, UpdateUser } from "../../network";
 import { clearAsyncStorage } from "../../asyncStorage";
 import firebase from "../../firebase/config";
 import { LOADING_START, LOADING_STOP } from "../../context/actions/types";
 import { uuid } from "../../utility/constants";
 import { Profile, ShowUsers } from "../../components";
 import { Store } from "../../context/store";
+import * as ImagePicker from "expo-image-picker";
+//import ImagePicker from "react-native-image-picker";
 
 const Dashboard = ({ navigation }) => {
   const globalState = useContext(Store);
@@ -93,6 +102,36 @@ const Dashboard = ({ navigation }) => {
     }
   }, []);
 
+  const selectPhotoTapped = async () => {
+    if (Platform.OS !== "web") {
+      const { status } = await ImagePicker.requestCameraRollPermissionsAsync();
+      if (status !== "granted") {
+        alert("Sorry, we need camera roll permissions to make this work!");
+      } else {
+        let result = await ImagePicker.launchImageLibraryAsync({
+          mediaTypes: ImagePicker.MediaTypeOptions.All,
+          allowsEditing: true,
+          aspect: [4, 3],
+          quality: 1,
+        });
+
+        console.log(result);
+
+        if (!result.cancelled) {
+          //setImage(result.uri);
+          //console.log(result.uri);
+          let source = result.uri;
+          UpdateUser(uuid, source).then(() => {
+            setUserDetail({
+              ...userDetail,
+              profileImg: source,
+            });
+          });
+        }
+      }
+    }
+  };
+
   const logout = () => {
     LogOutUser()
       .then(() => {
@@ -110,7 +149,13 @@ const Dashboard = ({ navigation }) => {
         alwaysBounceVertical={false}
         data={allUsers}
         keyExtractor={(_, index) => index.toString()}
-        ListHeaderComponent={<Profile img={profileImg} name={name} />}
+        ListHeaderComponent={
+          <Profile
+            img={profileImg}
+            name={name}
+            onEditImgTap={selectPhotoTapped}
+          />
+        }
         renderItem={({ item }) => (
           <ShowUsers name={item.name} img={item.profileImg} />
         )}
