@@ -4,7 +4,7 @@ const initialState = {
   loading: false,
 };
 
-const loader = (state = initialState) => {
+const loader = (state = initialState, action) => {
   const { type, payload } = action;
   switch (type) {
     case LOADING_START:

@@ -1,12 +1,20 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { SafeAreaView, Text, View } from "react-native";
 import { globalStyle, color } from "../../utility";
 import { InputField, Button } from "../../components";
 import LottieView from "lottie-react-native";
+import { Store } from "../../context/store";
+import { LOADING_START, LOADING_STOP } from "../../context/actions/types";
+import { SignUpRequest, AddUser } from "../../network";
+import { keys, setAsyncStorage } from "../../asyncStorage";
+import { setUniqueValue } from "../../utility/constants";
+import firebase from "../../firebase/config";
 
 const animation = require("../../annimation/signupannimation.json");
 
 const Signup = ({ navigation }) => {
+  const globalState = useContext(Store);
+  const { dispatchLoaderAction } = globalState;
   const [credentials, setCredentials] = useState({
     email: "",
     name: "",
@@ -23,7 +31,7 @@ const Signup = ({ navigation }) => {
     });
   };
 
-  onLoginPress = () => {
+  const onSignupPress = () => {
     if (!name) {
       alert("Your name is required");
     } else if (!email) {
@@ -33,7 +41,36 @@ const Signup = ({ navigation }) => {
     } else if (password !== confirmPassword) {
       alert("Passwords do  not match");
     } else {
-      alert(JSON.stringify(credentials));
+      dispatchLoaderAction({
+        type: LOADING_START,
+      });
+      SignUpRequest(email, password)
+        .then(() => {
+          console.log(firebase.auth().currentUser.uid);
+          let uid = firebase.auth().currentUser.uid;
+          let profileImg = "";
+          AddUser(name, email, uid, profileImg)
+            .then(() => {
+              setAsyncStorage(keys.uuid, uid);
+              setUniqueValue(uid);
+              dispatchLoaderAction({
+                type: LOADING_STOP,
+              });
+              navigation.navigate("Dashboard");
+            })
+            .catch((err) => {
+              dispatchLoaderAction({
+                type: LOADING_STOP,
+              });
+              alert(err);
+            });
+        })
+        .catch((error) => {
+          dispatchLoaderAction({
+            type: LOADING_STOP,
+          });
+          alert(error);
+        });
     }
   };
 
@@ -76,7 +113,7 @@ const Signup = ({ navigation }) => {
           onChangeText={(text) => handleOnChange("confirmPassword", text)}
         />
 
-        <Button title="Login" onPress={() => onLoginPress()} />
+        <Button title="Sign Up" onPress={() => onSignupPress()} />
         <Text
           style={{
             fontSize: 28,
@@ -85,7 +122,7 @@ const Signup = ({ navigation }) => {
           }}
           onPress={() => navigation.navigate("Login")}
         >
-          Sign Up
+          Login
         </Text>
       </View>
     </SafeAreaView>
