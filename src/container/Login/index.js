@@ -1,10 +1,19 @@
 import React, { useState, useContext } from "react";
-import { SafeAreaView, Text, View, KeyboardAvoidingView } from "react-native";
+import {
+  SafeAreaView,
+  Text,
+  View,
+  KeyboardAvoidingView,
+  LogBox,
+} from "react-native";
 import { globalStyle, color } from "../../utility";
 import { InputField, Button } from "../../components";
 import LottieView from "lottie-react-native";
 import { Store } from "../../context/store";
-import { LOADING_START } from "../../context/actions/types";
+import { LOADING_START, LOADING_STOP } from "../../context/actions/types";
+import { LoginRequest } from "../../network";
+import { keys, setAsyncStorage } from "../../asyncStorage";
+import { setUniqueValue } from "../../utility/constants";
 
 const animation = require("../../annimation/loginannimation.json");
 
@@ -35,6 +44,21 @@ const Login = ({ navigation }) => {
       dispatchLoaderAction({
         type: LOADING_START,
       });
+      LoginRequest(email, password)
+        .then((res) => {
+          setAsyncStorage(keys.uuid, res.user.uid);
+          setUniqueValue(res.user.uid);
+          dispatchLoaderAction({
+            type: LOADING_STOP,
+          });
+          navigation.replace("Dashboard");
+        })
+        .catch((error) => {
+          dispatchLoaderAction({
+            type: LOADING_STOP,
+          });
+          alert(error);
+        });
     }
   };
   return (
