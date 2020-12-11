@@ -10,9 +10,6 @@ RocketChater is an iOS application built with Expo, to have a feel of its awesom
 ![splashscreen](screenshots/splashscreen.jpg)
 ![signup](screenshots/signup.jpg)
 
-**Firebase auth flow**
-![media/authflow.png](media/authflow.png)
-
 ## Included
 
 - Firebase for database management
