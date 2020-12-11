@@ -5,7 +5,7 @@ import { globalStyle, color } from "../../utility";
 export default ({ route, navigation }) => {
   const { params } = route;
   const { name, img, imgText } = params;
-  console.log(img);
+  //console.log(img);
   useLayoutEffect(() => {
     navigation.setOptions({
       headerTitle: <Text>{name}</Text>,
